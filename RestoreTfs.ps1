@@ -42,7 +42,7 @@ if ($diffBackup -and $diffBackup.LastWriteTime -lt $fullBackup.LastWriteTime) {
 }
 
 # ログチェーン（最後のバックアップより後のもの）
-$lastBackupTime = $diffBackup ? $diffBackup.LastWriteTime : $fullBackup.LastWriteTime
+$lastBackupTime = if ($diffBackup) { $diffBackup.LastWriteTime } else { $fullBackup.LastWriteTime }
 $logChain = $logs | Where-Object {
     $_.LastWriteTime -gt $lastBackupTime
 } | Sort-Object LastWriteTime
@@ -79,7 +79,7 @@ if ($logChain.Count -gt 0) {
 }
 foreach ($log in $logChain) {
     $isLast = ($log -eq $logChain[-1])
-    $recovery = $isLast ? "RECOVERY" : "NORECOVERY"
+    $recovery = if ($isLast) { "RECOVERY" } else { "NORECOVERY" }
 
 $restoreCommands += @"
 RESTORE LOG [$DatabaseName]

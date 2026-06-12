@@ -86,7 +86,7 @@ foreach ($log in $logChain) {
             From  = $prev.Name
             To    = $log.Name
             Gap   = "$hours 時間"
-            Alert = $($hours -gt $MaxLogGapHours ? "⚠ 長" : "✓")
+            Alert = $(if ($hours -gt $MaxLogGapHours) { "⚠ 長" } else { "✓" })
         }
 
         # 最大許容時間を超えたら警告
